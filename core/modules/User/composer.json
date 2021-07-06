@@ -1,0 +1,26 @@
+{
+    "name": "soosyze-core/user",
+    "type": "soosyze-module",
+    "description": "Management of authentication and user accounts",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\User\\": "/"
+        }
+    },
+    "extra": {
+        "soosyze": {
+            "title": "User",
+            "package": "Core",
+            "controller": "SoosyzeCore\\User\\Controller\\User",
+            "icon": {
+                "name": "fas fa-user",
+                "background-color": "#a32949",
+                "color": "#fff"
+            }
+        }
+    },
+    "support": {
+        "docs": "https://soosyze.com/documentation/utilisateur"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "name": "soosyze-core/fez",
+    "type": "soosyze-theme",
+    "description": "Light theme with a multi-level horizontal menu.",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\Theme\\Fez\\": "/"
+        }
+    },
+    "extra": {
+        "soosyze": {
+            "title": "Fez",
+            "sections": [
+                "header",
+                "sidebar",
+                "content_header",
+                "content_footer",
+                "footer",
+                "footer_first",
+                "footer_second"
+            ]
+        }
+    }
+}

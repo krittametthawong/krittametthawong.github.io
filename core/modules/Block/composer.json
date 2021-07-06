@@ -1,0 +1,23 @@
+{
+    "name": "soosyze-core/block",
+    "type": "soosyze-module",
+    "description": "Static and dynamic content block manager",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\Block\\": "/"
+        }
+    },
+    "extra": {
+        "soosyze": {
+            "title": "Block",
+            "package": "Core",
+            "controller": "SoosyzeCore\\Block\\Controller\\Block",
+            "icon": {
+                "name": "fas fa-columns",
+                "background-color": "#5cb85c",
+                "color": "#001f00"
+            }
+        }
+    }
+}

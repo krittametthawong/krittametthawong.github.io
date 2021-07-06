@@ -1,0 +1,26 @@
+{
+    "name": "soosyze-core/system",
+    "type": "soosyze-module",
+    "description": "Core of Soosyze CMS",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\System\\": "/"
+        }
+    },
+    "support": {
+        "docs": "https://soosyze.com/documentation/utilisateur"
+    },
+    "extra": {
+        "soosyze": {
+            "title": "System",
+            "package": "Core",
+            "controller": "SoosyzeCore\\System\\Controller\\ModulesManager",
+            "icon": {
+                "name": "fa fa-th-large",
+                "background-color": "#5d2ce2",
+                "color": "#fff"
+            }
+        }
+    }
+}

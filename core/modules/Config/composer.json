@@ -1,0 +1,23 @@
+{
+    "name": "soosyze-core/config",
+    "type": "soosyze-module",
+    "description": "Configuration Panel",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "SoosyzeCore\\Config\\": "/"
+        }
+    },
+    "extra": {
+        "soosyze": {
+            "title": "Config",
+            "package": "Core",
+            "controller": "SoosyzeCore\\Config\\Controller\\Config",
+            "icon": {
+                "name": "fas fa-cog",
+                "background-color": "#E5A342",
+                "color": "#331E00"
+            }
+        }
+    }
+}
