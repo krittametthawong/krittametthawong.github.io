@@ -1,0 +1,151 @@
+body, html {
+  margin: 0;
+}
+
+body {
+  color: white;
+  font-family: Roboto, sans-serif;
+  padding: 20px;
+  background: #292929;
+}
+
+.warning {
+  font-weight: 200;
+  color: #E24343;
+}
+
+h1 {
+  font-size: 1em;
+}
+
+input, button {
+  color: black;
+}
+
+.login-area {
+  display: none;
+}
+
+.app > .login-area ~ * {
+  transition: opacity 300ms;
+}
+
+.app.init > .login-area {
+  display: block;
+  opacity: 1;
+}
+
+.app.init > .login-area ~ * {
+  opacity: 0;
+}
+
+.app.loggedIn > p {
+  display: none;
+}
+
+.widget-listing,
+.composition-listing {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: auto;
+  overflow-y: hidden;
+}
+
+.widget-listing li,
+.composition-listing li {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+}
+
+.widget {
+  position: relative;
+  width: 142px;
+}
+
+.widget img {
+  vertical-align: top;
+  cursor: pointer;
+  width: 142px;
+  height: 100px;
+}
+
+.widget_name {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #000000;
+  background: rgba(0,0,0, 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selected .widget_name {
+  background: #ec574d;
+}
+
+.widget.widget--new img {
+  opacity: .2;
+}
+
+.edit-area_pane {
+  background: #333;
+  box-shadow: 1px 1px 2px rgba(0,0,0,.5);
+  width: 260px;
+  margin: 20px auto;
+  padding: 20px;
+  transition: width 300ms;
+}
+
+.edit-area.edit-area--with-editor .edit-area_pane {
+  width: 490px;
+}
+
+.edit-area_pane label {
+  display: block;
+}
+
+.edit-area_pane label input {
+  background: transparent;
+  color: white;
+  border: none;
+  border-bottom: 2px solid #292929;
+  margin: 5px 0;
+}
+
+.edit-area.init > * {
+  display: none;
+}
+
+.edit-area.edit-area--with-editor label{
+  display: none;
+}
+
+.edit-area .widget-area {
+  margin: 0 auto;
+}
+
+.edit-area .editor-area {
+  margin-top: 20px;
+}
+
+.embed-code-area {
+  display: none;
+}
+
+.login-area > button {
+  background-color: #ea5852;
+  color: #fff;
+  font-size: 14px;
+  min-width: 100px;
+  text-align: center;
+  border: none;
+  border-radius: 30px;
+  padding: 10px;
+  outline: none;
+  cursor: pointer;
+  margin: 20px 0;
+}
