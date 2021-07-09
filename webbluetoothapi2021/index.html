@@ -35,8 +35,16 @@
           <div class="carousel-item active">
             <div class="row">
               <div class="col-md-9 caption">
-<h1>Bluetooth® Serial Module (HC-05 Master/Slave mode) </h1>
-                <a
+				<img
+                  src="./images/bluetooth-icon.png"
+                  class="d-block"
+				  width="60"
+                  alt="..."
+                />
+                <h1>Bluetooth® Serial Module <br>
+                (HC-05 Master/Slave mode) </h1>
+                <br>
+<a
                   class="btn btn-info btn-lg" href="http://www.ioxhop.com/article/26/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B8%87%E0%B8%B2%E0%B8%99-bluetooth-module-hc05-%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B8%A5%E0%B8%B0%E0%B9%80%E0%B8%AD%E0%B8%B5%E0%B8%A2%E0%B8%94"
                   target="_blank"
                   >Learn More</a
@@ -54,25 +62,30 @@
           <div class="carousel-item">
             <div class="row">
               <div class="col-md-9 caption">
-                <img src="images/logo.png" />
+				<img
+                  src="./images/bluetooth-icon.png"
+                  class="d-block"
+				  width="60"
+                  alt="..."
+                />
                 <h1>Create your own BLE applications</h1>
+				  <br>
                 <a
-                  class="btn btn-info btn-lg"
-                  href="https://www.bleuio.com/"
+                  class="btn btn-info btn-lg" href="http://www.ioxhop.com/article/26/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B8%87%E0%B8%B2%E0%B8%99-bluetooth-module-hc05-%E0%B9%81%E0%B8%9A%E0%B8%9A%E0%B8%A5%E0%B8%B0%E0%B9%80%E0%B8%AD%E0%B8%B5%E0%B8%A2%E0%B8%94"
                   target="_blank"
                   >Learn More</a
                 >
               </div>
               <div class="col-md-3">
                 <img
-                  src="images/bleuIO_black_withlogo.png"
+                  src="./images/HC-05Module2.jpg"
                   class="d-block w-100"
                   alt="..."
                 />
               </div>
             </div>
           </div>
-          <div class="carousel-item">
+          <!--<div class="carousel-item">
             <div class="row">
               <div class="col-md-9 caption">
                 <img src="images/logo.png" />
@@ -92,7 +105,7 @@
                 />
               </div>
             </div>
-          </div>
+          </div>-->
         </div>
       </div>
       <!-- end carousel -->
@@ -113,27 +126,51 @@
             >
             in Google Chrome browser.
           </div>
-
-          <br />
-          <button id="butConnect" type="button" class="btn btn-success">
-            Connect
-          </button>
-          <br /><br />
-          <button
-            id="butIbeacon"
-            type="button"
-            disabled
-            class="btn btn-warning"
-          >
-            Make iBeacon
-          </button>
-          <button id="butEddystone" type="button" disabled class="btn btn-info">
-            Make Eddystone Beacon
-          </button>
-          <button id="butScan" type="button" disabled class="btn btn-primary">
+			<hr/>
+    <h2>Status</h2>
+    <table border="1" class="table table-bordered text-center align-content-md-center table-active text-light">
+        <tr>
+            <td>
+                <b>Connected</b>
+            </td>
+            <td>
+                <b>Service Discovery Completed</b>
+            </td>
+            <td>
+                <b>Notifications</b>
+            </td>
+        </tr>
+        <tr>
+            <td id="status_connected">false</td>
+            <td id="status_discovered">false</td>
+            <td id="status_notifications">false</td>
+        </tr>
+    </table>
+			<hr/>
+<h2>Device Discovery and Connection</h2>
+			<br/>
+          <button id="butScan" type="button" class="btn btn-success">
             Scan BLE Devices
           </button>
-
+          <br /><hr />
+			<h2>Test 4 Color LEDs</h2>
+			<br/>
+          <button
+            type="button"
+            disabled
+            class="btn btn-danger"
+          >
+            Red LED
+          </button>
+          <button type="button" disabled class="btn btn-warning">
+            Yellow LED
+          </button>
+          <button type="button" disabled class="btn btn-success">
+            Green LED
+          </button>
+          <button type="button" disabled class="btn btn-primary">
+            Blue LED
+          </button>
           <pre id="log" class="mt-5 d-none"></pre>
         </main>
       </div>
