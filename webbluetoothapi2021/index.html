@@ -22,7 +22,62 @@
       crossorigin="anonymous"
     />
 
-    <script src="script.js" defer></script>
+    <!--<script src="script.js" defer></script>-->
+	      <script>
+        var connected = false;
+        var services_discovered = false;
+        var selected_device;
+        var connected_server;
+        function setConnectedStatus(status) {
+            connected = status;
+            document.getElementById('status_connected').innerHTML = status;
+            if (status == true) {
+                 document.getElementById('btn_scan').innerHTML = "Disconnect";
+            } 
+            else {
+                document.getElementById('btn_scan').innerHTML = "Discover Devices";
+            }
+        }
+        function setDiscoveryStatus(status) {
+            services_discovered = status;
+            document.getElementById('status_discovered').innerHTML = status;
+        }
+        
+        function discoverDevicesOrDisconnect() {
+            console.log("discoverDevicesOrDisconnect");
+            if (!connected) {
+                discoverDevices();
+            } 
+            else {
+                // TODO disconnect from the current device
+            }
+        }
+        function discoverDevices() {
+            console.log("discoverDevices");
+            navigator.bluetooth.requestDevice({acceptAllDevices: true})
+                .then(device => {
+                        console.log('> Name: ' + device.name);
+                        console.log('> Id: ' + device.id);
+                        console.log('> Connected: ' + device.gatt.connected);
+                        selected_device = device;
+                        console.log(selected_device);
+                })
+                .catch(error => {
+                        alert('ERROR: ' + error);
+                        console.log('ERROR: ' + error);
+                });
+
+        }
+        function readModelNumber() {
+            console.log("readModelNumber");
+        }
+        function randomLEDs() {
+            console.log("randomLEDs");
+        }
+        function toggleAccelerometerNotifications() {
+            console.log("toggleAccelerometerNotifications");
+        }
+    </script>
   </head>
   <body>
     <div class="container">
@@ -150,7 +205,7 @@
 			<hr/>
 <h2>Device Discovery and Connection</h2>
 			<br/>
-          <button id="butScan" type="button" class="btn btn-success">
+          <button id="btn_scan" onclick=" discoverDevicesOrDisconnect()" type="button" class="btn btn-success">
             Scan BLE Devices
           </button>
           <br /><hr />
