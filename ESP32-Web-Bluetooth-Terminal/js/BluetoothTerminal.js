@@ -249,12 +249,13 @@ class BluetoothTerminal {
 	
     return navigator.bluetooth.requestDevice({
 		
-	  filters: [{
-        name: 'ESP32'
-      }],
-      optionalServices: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e',
-	  0xFFE0
-	  ]
+//	  filters: [{
+//        name: 'ESP32'
+//      }],
+//      optionalServices: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e',
+//	  0xFFE0
+//	  ],
+		acceptAllDevices:true
     }).
 	
  
