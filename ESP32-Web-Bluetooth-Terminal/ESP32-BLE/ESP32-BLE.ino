@@ -13,6 +13,13 @@
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
+//#define ENCODER_LEFT_WHEEL_CHANNEL  1
+//#define ENCODER_RIGHT_WHEEL_CHANNEL 2
+//#define WEIGHT_SENSOR_CHANNEL 3
+//
+//uint8_t _weight_value_highbyte, _weight_value_lowbyte;
+//uint8_t _encoder_left_value_highbyte, _encoder_
+//uint8_t MOTOR_LEFT
  
 #define BLE_NAME "ESP32" //must match filters name in bluetoothterminal.js- navigator.bluetooth.requestDevice
 //#define SERVICE_UUID        "6e400001-b5a3-f393-e0a9-e50e24dcca9e" //- must match optional services on navigator.bluetooth.requestDevice
