@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            font-size: 1.5vw
+        }
+        input {
+              width: 70%;
+            height: 70%;
+                font-size: 1.5vw
+        }
+        button{
+            
+              width: 80%;
+            height: 70%;
+                font-size: 1.5vw
+        }
+        
+    </style>
+<title>MC-WRGTH2024 Calculator</title>
+<script>
+function calculate() {
+  document.getElementById("linesum").innerHTML = (parseInt(document.getElementById("linenumber").value) * 50).toString();
+    
+  document.getElementById("wallsum").innerHTML = (parseInt(document.getElementById("wallnumber").value) * 50).toString();
+    
+  document.getElementById("entersum").innerHTML = (parseInt(document.getElementById("enternumber").value) * 10).toString();
+    
+  document.getElementById("redsum").innerHTML = (parseInt(document.getElementById("rednumber").value) * 20).toString();
+    
+  document.getElementById("greensum").innerHTML = (parseInt(document.getElementById("greennumber").value) * 5).toString();
+    
+  document.getElementById("yellowsum").innerHTML = (parseInt(document.getElementById("yellownumber").value) * 5).toString();
+    
+  document.getElementById("bluesum").innerHTML = (parseInt(document.getElementById("bluenumber").value) * 1).toString();
+    
+  document.getElementById("exitsum").innerHTML = (parseInt(document.getElementById("exitnumber").value) * 10).toString();
+    let bingosumint = 0;
+      if (bingocheckbox.checked == true){
+    document.getElementById("bingosum").innerHTML = "100";
+          bingosumint = 100;
+  } else {
+    document.getElementById("bingosum").innerHTML = "0";
+      bingosumint = 0;
+  }
+    let superbingosumint = 0;
+          if (superbingocheckbox.checked == true){
+    document.getElementById("superbingosum").innerHTML = "100";
+              superbingosumint = 100;
+  } else {
+    document.getElementById("superbingosum").innerHTML = "0";
+      superbingosumint = 0;
+  }
+    let threezone_sum = (parseInt(document.getElementById("linenumber").value) * 50)
+    + (parseInt(document.getElementById("wallnumber").value) * 50)
+    + (parseInt(document.getElementById("enternumber").value) * 10)
+    +(parseInt(document.getElementById("rednumber").value) * 20)
+    +(parseInt(document.getElementById("greennumber").value) * 5)
+    +(parseInt(document.getElementById("yellownumber").value) * 5)
+    +(parseInt(document.getElementById("bluenumber").value) * 1)
+    + (parseInt(document.getElementById("exitnumber").value) * 10)
+    
+    let totalsumint = threezone_sum + bingosumint + superbingosumint;
+    document.getElementById("totalsum").innerHTML = totalsumint.toString();
+}
+function reset_score()
+    {
+        document.getElementById("linenumber").value = "0";
+        document.getElementById("wallnumber").value = "0";
+        document.getElementById("enternumber").value = "0";
+        document.getElementById("rednumber").value = "0";
+        document.getElementById("greennumber").value = "0";
+        document.getElementById("yellownumber").value = "0";
+        document.getElementById("bluenumber").value = "0";
+        document.getElementById("exitnumber").value = "0";
+        document.getElementById("bingocheckbox").checked = false;
+        document.getElementById("superbingocheckbox").checked = false;
+        document.getElementById("linesum").innerHTML = (parseInt(document.getElementById("linenumber").value) * 50).toString();
+    
+  document.getElementById("wallsum").innerHTML = (parseInt(document.getElementById("wallnumber").value) * 50).toString();
+    
+  document.getElementById("entersum").innerHTML = (parseInt(document.getElementById("enternumber").value) * 10).toString();
+    
+  document.getElementById("redsum").innerHTML = (parseInt(document.getElementById("rednumber").value) * 20).toString();
+    
+  document.getElementById("greensum").innerHTML = (parseInt(document.getElementById("greennumber").value) * 5).toString();
+    
+  document.getElementById("yellowsum").innerHTML = (parseInt(document.getElementById("yellownumber").value) * 5).toString();
+    
+  document.getElementById("bluesum").innerHTML = (parseInt(document.getElementById("bluenumber").value) * 1).toString();
+        
+  document.getElementById("exitsum").innerHTML = (parseInt(document.getElementById("exitnumber").value) * 10).toString();
+        
+    document.getElementById("totalsum").innerHTML = "0";
+    }
+</script>
+</head>
+
+<body>
+<table width="100%" height="100%" border="2" cellpadding="1">
+  <tbody>
+    <tr>
+      <td width="20%">&nbsp;ZONE</td>
+      <td width="20%">&nbsp;MISSION</td>
+      <td width="15%">&nbsp;SCORE</td>
+      <td width="20%">&nbsp;FACTOR</td>
+      <td width="25%">&nbsp;SUM</td>
+    </tr>
+    <tr>
+      <td>&nbsp;LINE</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;<input type="number"  name="number" id="linenumber" value="0" min="0" ></td>
+      <td>&nbsp; × 50 =</td>
+      <td>&nbsp;<b id="linesum">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;WALL</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;<input type="number" name="number" id="wallnumber" value="0" min="0" ></td>
+      <td>&nbsp; × 50 =</td>
+      <td>&nbsp;<b id="wallsum">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;BALL</td>
+      <td>ENTER</td>
+      <td>&nbsp;<input type="number" name="number" id="enternumber" value="0" min="0"></td>
+      <td>&nbsp; × 10 =</td>
+      <td>&nbsp;<b id="entersum">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+        <td bgcolor="red" style="color:white;">&nbsp;RED</td>
+      <td>&nbsp;<input type="number" name="number" id="rednumber" value="0" min="0"></td>
+      <td>&nbsp; × 20 =</td>
+      <td>&nbsp;<b id="redsum" style="color:red">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td bgcolor="green" style="color:white;">&nbsp;GREEN</td>
+      <td>&nbsp;<input type="number" name="number" id="greennumber" value="0" min="0"></td>
+      <td>&nbsp; × 5 =</td>
+      <td>&nbsp;<b id="greensum" style="color:green">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td bgcolor="yellow" style="color:blue;">&nbsp;YELLOW</td>
+      <td>&nbsp;<input type="number" name="number" id="yellownumber" value="0" min="0" ></td>
+      <td>&nbsp; × 5 =</td>
+      <td>&nbsp;<b id="yellowsum" style="color: #7D7C00">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td bgcolor="blue" style="color:white;">&nbsp;BLUE</td>
+      <td>&nbsp;<input type="number" name="number" id="bluenumber" value="0" min="0"></td>
+      <td>&nbsp; × 1 =</td>
+      <td>&nbsp;<b id="bluesum" style="color: blue">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;EXIT</td>
+      <td>&nbsp;<input type="number" name="number" id="exitnumber" value="0" min="0"></td>
+      <td>&nbsp; × 10 =</td>
+      <td>&nbsp;<b id="exitsum">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;BINGO</td>
+      <td>&nbsp;</td>
+      <td><input type="checkbox" name="checkbox" id="bingocheckbox"></td>
+      <td>&nbsp; + 100 =</td>
+      <td>&nbsp;<b id="bingosum">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;SUPERBINGO</td>
+      <td>&nbsp;</td>
+      <td><input type="checkbox" name="checkbox" id="superbingocheckbox"></td>
+      <td>&nbsp; + 100 =</td>
+      <td>&nbsp;<b id="superbingosum">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;<b>TOTAL</b></td>
+      <td>&nbsp;<b id="totalsum">0</b></td>
+    </tr>
+    <tr>
+      <td>&nbsp;<input type="submit" name="resetsubmit" id="resetsubmit" value="Reset" onClick="reset_score()"></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;<button type="button"
+onclick="calculate()">
+Calculate</button>
+</td>
+      <td>&nbsp;</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
