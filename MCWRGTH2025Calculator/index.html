@@ -72,73 +72,7 @@
         
     </style>
 <title>Mission Challenge WRGTH2025 Calculator</title>
-<script>
-function calculate() {
-  document.getElementById("linesum").innerHTML = (parseInt(document.getElementById("linenumber").value) * 50).toString();
-    
-  document.getElementById("wallsum").innerHTML = (parseInt(document.getElementById("wallnumber").value) * 50).toString();
-    
-  document.getElementById("entersum").innerHTML = (parseInt(document.getElementById("enternumber").value) * 10).toString();
-    
-  document.getElementById("redsum").innerHTML = (parseInt(document.getElementById("rednumber").value) * 20).toString();
-    
-  document.getElementById("greensum").innerHTML = (parseInt(document.getElementById("greennumber").value) * 5).toString();
-    
-  document.getElementById("yellowsum").innerHTML = (parseInt(document.getElementById("yellownumber").value) * 5).toString();
-    
-  document.getElementById("bluesum").innerHTML = (parseInt(document.getElementById("bluenumber").value) * 1).toString();
-    
-  document.getElementById("exitsum").innerHTML = (parseInt(document.getElementById("exitnumber").value) * 10).toString();
-    document.getElementById("bingosum").innerHTML = (parseInt(document.getElementById("bingonumber").value) * 100).toString();
-    document.getElementById("superbingosum").innerHTML = (parseInt(document.getElementById("superbingonumber").value) * 100).toString();
-    let bingosumint = (parseInt(document.getElementById("bingonumber").value) * 100);
-    let superbingosumint = (parseInt(document.getElementById("superbingonumber").value) * 100);
-    let threezone_sum = (parseInt(document.getElementById("linenumber").value) * 50)
-    + (parseInt(document.getElementById("wallnumber").value) * 50)
-    + (parseInt(document.getElementById("enternumber").value) * 10)
-    +(parseInt(document.getElementById("rednumber").value) * 20)
-    +(parseInt(document.getElementById("greennumber").value) * 5)
-    +(parseInt(document.getElementById("yellownumber").value) * 5)
-    +(parseInt(document.getElementById("bluenumber").value) * 1)
-    + (parseInt(document.getElementById("exitnumber").value) * 10);
-    
-    let totalsumint = threezone_sum + bingosumint + superbingosumint;
-    document.getElementById("totalsum").innerHTML = totalsumint.toString();
-}
-function reset_score()
-    {
-        document.getElementById("linenumber").value = "0";
-        document.getElementById("wallnumber").value = "0";
-        document.getElementById("enternumber").value = "0";
-        document.getElementById("rednumber").value = "0";
-        document.getElementById("greennumber").value = "0";
-        document.getElementById("yellownumber").value = "0";
-        document.getElementById("bluenumber").value = "0";
-        document.getElementById("exitnumber").value = "0";
-        document.getElementById("bingonumber").value = "0";
-        document.getElementById("superbingonumber").value = "0";
-        document.getElementById("linesum").innerHTML = (parseInt(document.getElementById("linenumber").value) * 50).toString();
-    
-  document.getElementById("wallsum").innerHTML = (parseInt(document.getElementById("wallnumber").value) * 50).toString();
-    
-  document.getElementById("entersum").innerHTML = (parseInt(document.getElementById("enternumber").value) * 10).toString();
-    
-  document.getElementById("redsum").innerHTML = (parseInt(document.getElementById("rednumber").value) * 20).toString();
-    
-  document.getElementById("greensum").innerHTML = (parseInt(document.getElementById("greennumber").value) * 5).toString();
-    
-  document.getElementById("yellowsum").innerHTML = (parseInt(document.getElementById("yellownumber").value) * 5).toString();
-    
-  document.getElementById("bluesum").innerHTML = (parseInt(document.getElementById("bluenumber").value) * 1).toString();
-        
-  document.getElementById("exitsum").innerHTML = (parseInt(document.getElementById("exitnumber").value) * 10).toString();
-        
-    document.getElementById("bingosum").innerHTML = (parseInt(document.getElementById("bingonumber").value) * 100).toString();
-    document.getElementById("superbingosum").innerHTML = (parseInt(document.getElementById("superbingonumber").value) * 100).toString();
-        
-    document.getElementById("totalsum").innerHTML = "0";
-    }
-</script>
+
 </head>
 
 <body>
@@ -242,5 +176,83 @@ Calculate</button>
     </tr>
   </tbody>
 </table>
+    <script>
+    const linesuminput = document.getElementById("linesum");
+    const wallsuminput = document.getElementById("wallsum");
+    const entersuminput = document.getElementById("entersum");
+    const redsuminput = document.getElementById("redsum");
+    const greensuminput = document.getElementById("greensum");
+    const yellowsuminput = document.getElementById("yellowsum");
+    const bluesuminput = document.getElementById("bluesum");
+    const exitsuminput = document.getElementById("exitsum");
+    const bingosuminput = document.getElementById("bingosum");
+    const superbingosuminput = document.getElementById("superbingosum");
+function calculate() {
+  document.getElementById("linesum").innerHTML = (parseInt(document.getElementById("linenumber").value) * 50).toString();
+    
+  document.getElementById("wallsum").innerHTML = (parseInt(document.getElementById("wallnumber").value) * 50).toString();
+    
+  document.getElementById("entersum").innerHTML = (parseInt(document.getElementById("enternumber").value) * 10).toString();
+    
+  document.getElementById("redsum").innerHTML = (parseInt(document.getElementById("rednumber").value) * 20).toString();
+    
+  document.getElementById("greensum").innerHTML = (parseInt(document.getElementById("greennumber").value) * 5).toString();
+    
+  document.getElementById("yellowsum").innerHTML = (parseInt(document.getElementById("yellownumber").value) * 5).toString();
+    
+  document.getElementById("bluesum").innerHTML = (parseInt(document.getElementById("bluenumber").value) * 1).toString();
+    
+  document.getElementById("exitsum").innerHTML = (parseInt(document.getElementById("exitnumber").value) * 10).toString();
+    document.getElementById("bingosum").innerHTML = (parseInt(document.getElementById("bingonumber").value) * 100).toString();
+    document.getElementById("superbingosum").innerHTML = (parseInt(document.getElementById("superbingonumber").value) * 100).toString();
+    let bingosumint = (parseInt(document.getElementById("bingonumber").value) * 100);
+    let superbingosumint = (parseInt(document.getElementById("superbingonumber").value) * 100);
+    let threezone_sum = (parseInt(document.getElementById("linenumber").value) * 50)
+    + (parseInt(document.getElementById("wallnumber").value) * 50)
+    + (parseInt(document.getElementById("enternumber").value) * 10)
+    +(parseInt(document.getElementById("rednumber").value) * 20)
+    +(parseInt(document.getElementById("greennumber").value) * 5)
+    +(parseInt(document.getElementById("yellownumber").value) * 5)
+    +(parseInt(document.getElementById("bluenumber").value) * 1)
+    + (parseInt(document.getElementById("exitnumber").value) * 10);
+    
+    let totalsumint = threezone_sum + bingosumint + superbingosumint;
+    document.getElementById("totalsum").innerHTML = totalsumint.toString();
+}
+function reset_score()
+    {
+        document.getElementById("linenumber").value = "0";
+        document.getElementById("wallnumber").value = "0";
+        document.getElementById("enternumber").value = "0";
+        document.getElementById("rednumber").value = "0";
+        document.getElementById("greennumber").value = "0";
+        document.getElementById("yellownumber").value = "0";
+        document.getElementById("bluenumber").value = "0";
+        document.getElementById("exitnumber").value = "0";
+        document.getElementById("bingonumber").value = "0";
+        document.getElementById("superbingonumber").value = "0";
+        document.getElementById("linesum").innerHTML = (parseInt(document.getElementById("linenumber").value) * 50).toString();
+    
+  document.getElementById("wallsum").innerHTML = (parseInt(document.getElementById("wallnumber").value) * 50).toString();
+    
+  document.getElementById("entersum").innerHTML = (parseInt(document.getElementById("enternumber").value) * 10).toString();
+    
+  document.getElementById("redsum").innerHTML = (parseInt(document.getElementById("rednumber").value) * 20).toString();
+    
+  document.getElementById("greensum").innerHTML = (parseInt(document.getElementById("greennumber").value) * 5).toString();
+    
+  document.getElementById("yellowsum").innerHTML = (parseInt(document.getElementById("yellownumber").value) * 5).toString();
+    
+  document.getElementById("bluesum").innerHTML = (parseInt(document.getElementById("bluenumber").value) * 1).toString();
+        
+  document.getElementById("exitsum").innerHTML = (parseInt(document.getElementById("exitnumber").value) * 10).toString();
+        
+    document.getElementById("bingosum").innerHTML = (parseInt(document.getElementById("bingonumber").value) * 100).toString();
+    document.getElementById("superbingosum").innerHTML = (parseInt(document.getElementById("superbingonumber").value) * 100).toString();
+        
+    document.getElementById("totalsum").innerHTML = "0";
+    }
+</script>
 </body>
+    
 </html>
