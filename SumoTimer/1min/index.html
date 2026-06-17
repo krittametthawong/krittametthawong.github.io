@@ -239,9 +239,8 @@
     const START_DELAY_SECONDS = 5;
     const MATCH_SECONDS = 60;
 
-    // Compensates for browser/speaker output latency.
-    // Increase slightly if a particular computer still plays late.
-    const BEEP_ADVANCE_MS = 90;
+    // No offset: beep exactly when the displayed second changes.
+    const BEEP_DELAY_MS = 0;
 
     const PHASE = Object.freeze({
       READY: "ready",
@@ -381,7 +380,7 @@
       gain.connect(audioContext.destination);
 
       const adjustedPerformanceMs =
-        targetPerformanceMs - BEEP_ADVANCE_MS;
+        targetPerformanceMs;
 
       let startTime;
 
