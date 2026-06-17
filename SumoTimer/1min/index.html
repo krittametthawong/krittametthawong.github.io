@@ -158,6 +158,13 @@
       text-shadow: 0 0 32px rgba(255, 212, 59, 0.26);
     }
 
+
+    body.resume-countdown #time,
+    body.resume-countdown #phase {
+      color: var(--yellow);
+      text-shadow: 0 0 32px rgba(255, 212, 59, 0.26);
+    }
+
     body.warning-15 #time {
       color: var(--orange);
       text-shadow: 0 0 34px rgba(255, 146, 43, 0.28);
@@ -243,6 +250,7 @@
     const PHASE = Object.freeze({
       READY: "ready",
       COUNTDOWN: "countdown",
+      RESUME_COUNTDOWN: "resume-countdown",
       MATCH: "match",
       FINISHED: "finished"
     });
@@ -261,6 +269,7 @@
     let animationId = null;
     let lastDisplayedSecond = null;
     let previousRemainingMs = remainingMs;
+    let pausedMatchRemainingMs = MATCH_SECONDS * 1000;
 
     function formatTime(milliseconds) {
       const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000));
@@ -415,6 +424,11 @@
         return;
       }
 
+      if (phase === PHASE.RESUME_COUNTDOWN) {
+        document.body.className = "resume-countdown";
+        return;
+      }
+
       if (phase === PHASE.FINISHED) {
         document.body.className = "finished";
         return;
@@ -446,9 +460,9 @@
       timeEl.textContent = formatTime(remainingMs);
 
       if (phase === PHASE.COUNTDOWN) {
-        phaseEl.textContent = running
-          ? "เริ่มการแข่งขันในอีก"
-          : "หยุดการนับถอยหลัง";
+        phaseEl.textContent = "เริ่มการแข่งขันในอีก";
+      } else if (phase === PHASE.RESUME_COUNTDOWN) {
+        phaseEl.textContent = "ดำเนินการแข่งขันต่อในอีก";
       } else if (phase === PHASE.MATCH) {
         phaseEl.textContent = running
           ? "กำลังแข่งขัน"
@@ -471,17 +485,37 @@
       lastDisplayedSecond = Math.ceil(remainingMs / 1000);
       previousRemainingMs = remainingMs;
 
+      if (phase === PHASE.MATCH) {
+        pausedMatchRemainingMs = remainingMs;
+      }
+
       updateDisplay();
       animationId = requestAnimationFrame(tick);
     }
 
-    function startSequence() {
+    function startInitialCountdown() {
       phase = PHASE.COUNTDOWN;
       remainingMs = START_DELAY_SECONDS * 1000;
       startCurrentPhase();
 
-      // ให้เสียงปิ๊บสำหรับเลข 5 ทันทีเมื่อเริ่มนับถอยหลัง
+      // เสียงสำหรับเลข 5 ทันที
       beep();
+    }
+
+    function startResumeCountdown() {
+      phase = PHASE.RESUME_COUNTDOWN;
+      remainingMs = START_DELAY_SECONDS * 1000;
+      startCurrentPhase();
+
+      // เสียงสำหรับเลข 5 ทันที
+      beep();
+    }
+
+    function stopAnimation() {
+      if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
     }
 
     function pauseTimer() {
@@ -489,22 +523,43 @@
         return;
       }
 
-      remainingMs = Math.max(0, endAt - performance.now());
-      running = false;
-
-      if (animationId !== null) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
+      // กดพักระหว่าง 5 วินาทีก่อนเริ่มแข่งขัน = รีเซตทันที
+      if (phase === PHASE.COUNTDOWN) {
+        resetTimer();
+        return;
       }
 
-      updateDisplay();
+      // กดพักระหว่าง 5 วินาทีก่อนกลับมาแข่งต่อ
+      // = ยกเลิก countdown และกลับไปสถานะพักที่เวลาเดิม
+      if (phase === PHASE.RESUME_COUNTDOWN) {
+        running = false;
+        stopAnimation();
+        phase = PHASE.MATCH;
+        remainingMs = pausedMatchRemainingMs;
+        previousRemainingMs = remainingMs;
+        lastDisplayedSecond = Math.ceil(remainingMs / 1000);
+        updateDisplay();
+        return;
+      }
+
+      if (phase === PHASE.MATCH) {
+        remainingMs = Math.max(0, endAt - performance.now());
+        pausedMatchRemainingMs = remainingMs;
+        previousRemainingMs = remainingMs;
+        running = false;
+        stopAnimation();
+        updateDisplay();
+      }
     }
 
     function playCountdownBeep(displayedSecond) {
       // Pre-start countdown only: 4, 3, 2, 1.
       // The first beep for 5 is played immediately in startSequence().
       if (
-        phase === PHASE.COUNTDOWN &&
+        (
+          phase === PHASE.COUNTDOWN ||
+          phase === PHASE.RESUME_COUNTDOWN
+        ) &&
         displayedSecond > 0 &&
         displayedSecond < 5
       ) {
@@ -550,12 +605,22 @@
       updateDisplay();
 
       if (remainingMs <= 0) {
-        if (phase === PHASE.COUNTDOWN) {
+        if (
+          phase === PHASE.COUNTDOWN ||
+          phase === PHASE.RESUME_COUNTDOWN
+        ) {
+          const isResuming =
+            phase === PHASE.RESUME_COUNTDOWN;
+
           highStartBeep();
           phase = PHASE.MATCH;
-          remainingMs = MATCH_SECONDS * 1000;
+          remainingMs = isResuming
+            ? pausedMatchRemainingMs
+            : MATCH_SECONDS * 1000;
+
+          pausedMatchRemainingMs = remainingMs;
           endAt = performance.now() + remainingMs;
-          lastDisplayedSecond = MATCH_SECONDS;
+          lastDisplayedSecond = Math.ceil(remainingMs / 1000);
           previousRemainingMs = remainingMs;
 
           updateDisplay();
@@ -590,6 +655,7 @@
 
       phase = PHASE.READY;
       remainingMs = MATCH_SECONDS * 1000;
+      pausedMatchRemainingMs = remainingMs;
       lastDisplayedSecond = null;
       previousRemainingMs = remainingMs;
 
@@ -605,14 +671,19 @@
 
       if (phase === PHASE.READY || phase === PHASE.FINISHED) {
         resetTimer();
-        startSequence();
+        startInitialCountdown();
         return;
       }
 
       if (running) {
         pauseTimer();
-      } else {
-        startCurrentPhase();
+        return;
+      }
+
+      // เริ่มต่อจากสถานะพักของการแข่งขัน:
+      // นับถอยหลังสีเหลือง 5 วินาทีก่อนเดินเวลาที่ค้างไว้
+      if (phase === PHASE.MATCH) {
+        startResumeCountdown();
       }
     }
 
