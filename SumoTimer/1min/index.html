@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUMO ROBOT TIMER</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --background: #0d0f14;
+      --panel: #191d25;
+      --text: #ffffff;
+      --muted: #b5bdca;
+      --green: #39db7a;
+      --yellow: #ffd43b;
+      --orange: #ff922b;
+      --red: #ef5350;
+      --finished-red: #c95b5b;
+      --blue: #2f80ed;
+      --gray: #596273;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: grid;
+      place-items: stretch;
+      overflow: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, #1c2330 0%, var(--background) 58%);
+      font-family: "Sarabun", Tahoma, sans-serif;
+      user-select: none;
+    }
+
+    .timer-card {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      padding: clamp(24px, 4vh, 52px) clamp(20px, 5vw, 72px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(20px, 3.2vh, 38px);
+      background: rgba(25, 29, 37, 0.96);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Kanit", "Sarabun", sans-serif;
+      font-size: clamp(30px, 4.8vw, 62px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: 0.11em;
+    }
+
+    #phase {
+      min-height: 1.5em;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(24px, 3.2vw, 40px);
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
+    #time {
+      margin: 0;
+      color: var(--green);
+      font-family: Consolas, "Courier New", monospace;
+      font-size: clamp(112px, 24vw, 280px);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 0.9;
+      letter-spacing: 0.045em;
+      white-space: nowrap;
+      text-shadow: 0 0 28px rgba(57, 219, 122, 0.22);
+      transition:
+        color 180ms ease,
+        text-shadow 180ms ease,
+        transform 180ms ease;
+    }
+
+    .controls {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 26px;
+    }
+
+    button {
+      min-width: 220px;
+      padding: 19px 38px;
+      border: 0;
+      border-radius: 15px;
+      color: #ffffff;
+      font-family: "Kanit", "Sarabun", sans-serif;
+      font-size: clamp(22px, 2.8vw, 33px);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+      transition:
+        transform 80ms ease,
+        filter 150ms ease;
+    }
+
+    button:hover {
+      filter: brightness(1.1);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    #startStopBtn {
+      background: var(--blue);
+    }
+
+    #resetBtn {
+      background: var(--gray);
+    }
+
+    .hint {
+      margin: 0;
+      color: #8f99aa;
+      font-size: clamp(15px, 1.7vw, 18px);
+      line-height: 1.6;
+    }
+
+    body.ready #time,
+    body.match-normal #time {
+      color: var(--green);
+      text-shadow: 0 0 28px rgba(57, 219, 122, 0.22);
+    }
+
+    body.countdown #time,
+    body.warning-30 #time {
+      color: var(--yellow);
+      text-shadow: 0 0 32px rgba(255, 212, 59, 0.26);
+    }
+
+    body.warning-15 #time {
+      color: var(--orange);
+      text-shadow: 0 0 34px rgba(255, 146, 43, 0.28);
+    }
+
+    body.warning-10 #time {
+      color: var(--red);
+      text-shadow:
+        0 0 16px rgba(239, 83, 80, 0.34),
+        0 0 34px rgba(239, 83, 80, 0.18);
+    }
+
+    body.finished #time {
+      color: var(--finished-red);
+      animation: soft-red-glow 1.15s infinite alternate ease-in-out;
+    }
+
+    @keyframes soft-red-glow {
+      from {
+        opacity: 0.9;
+        transform: scale(1);
+        text-shadow:
+          0 0 7px rgba(201, 91, 91, 0.22),
+          0 0 16px rgba(201, 91, 91, 0.12);
+      }
+
+      to {
+        opacity: 0.72;
+        transform: scale(1.006);
+        text-shadow:
+          0 0 13px rgba(201, 91, 91, 0.31),
+          0 0 25px rgba(201, 91, 91, 0.16);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .timer-card {
+        padding: 22px 16px;
+        gap: 22px;
+      }
+
+      #time {
+        font-size: clamp(88px, 24vw, 152px);
+        letter-spacing: 0.02em;
+      }
+
+      .controls {
+        gap: 16px;
+      }
+
+      button {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body class="ready">
+  <main class="timer-card">
+    <h1>SUMO ROBOT TIMER</h1>
+
+    <p id="phase">พร้อมเริ่มการแข่งขัน</p>
+
+    <div id="time" aria-live="polite">01:00</div>
+
+    <div class="controls">
+      <button id="startStopBtn" type="button">START</button>
+      <button id="resetBtn" type="button">RESET</button>
+    </div>
+
+    <p class="hint">Space = Start/Stop &nbsp;&nbsp;|&nbsp;&nbsp; R = Reset</p>
+
+    <!-- วางไฟล์ Horn10.mp3 ไว้ในโฟลเดอร์เดียวกับไฟล์ HTML -->
+    <audio id="hornAudio" src="Horn10.mp3" preload="auto"></audio>
+  </main>
+
+  <script>
+    const START_DELAY_SECONDS = 5;
+    const MATCH_SECONDS = 60;
+
+    // Compensates for browser/speaker output latency.
+    // Increase slightly if a particular computer still plays late.
+    const BEEP_ADVANCE_MS = 90;
+
+    const PHASE = Object.freeze({
+      READY: "ready",
+      COUNTDOWN: "countdown",
+      MATCH: "match",
+      FINISHED: "finished"
+    });
+
+    const timeEl = document.getElementById("time");
+    const phaseEl = document.getElementById("phase");
+    const startStopBtn = document.getElementById("startStopBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const hornAudio = document.getElementById("hornAudio");
+    hornAudio.load();
+
+    let phase = PHASE.READY;
+    let remainingMs = MATCH_SECONDS * 1000;
+    let running = false;
+    let endAt = 0;
+    let animationId = null;
+    let lastDisplayedSecond = null;
+    let scheduledBeepSources = [];
+
+    function formatTime(milliseconds) {
+      const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000));
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+
+      return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0")
+      );
+    }
+
+    let audioContext = null;
+    let beepBuffer = null;
+
+    async function ensureAudioReady() {
+      try {
+        if (!audioContext) {
+          const AudioContextClass =
+            window.AudioContext || window.webkitAudioContext;
+
+          try {
+            audioContext = new AudioContextClass({
+              latencyHint: "interactive"
+            });
+          } catch (error) {
+            audioContext = new AudioContextClass();
+          }
+
+          const sampleRate = audioContext.sampleRate;
+          const duration = 0.10;
+          const frameCount = Math.floor(sampleRate * duration);
+
+          beepBuffer = audioContext.createBuffer(
+            1,
+            frameCount,
+            sampleRate
+          );
+
+          const samples = beepBuffer.getChannelData(0);
+          const frequency = 900;
+
+          for (let i = 0; i < frameCount; i++) {
+            const time = i / sampleRate;
+            const fadeOut = Math.max(0, 1 - time / duration);
+
+            samples[i] =
+              Math.sin(2 * Math.PI * frequency * time) *
+              fadeOut *
+              0.18;
+          }
+        }
+
+        if (audioContext.state === "suspended") {
+          await audioContext.resume();
+        }
+
+        return audioContext.state === "running";
+      } catch (error) {
+        console.warn("ไม่สามารถเตรียมระบบเสียงได้:", error);
+        return false;
+      }
+    }
+
+    function beep() {
+      try {
+        if (
+          !audioContext ||
+          audioContext.state !== "running" ||
+          !beepBuffer
+        ) {
+          return;
+        }
+
+        const source = audioContext.createBufferSource();
+        source.buffer = beepBuffer;
+        source.connect(audioContext.destination);
+        source.start(audioContext.currentTime);
+      } catch (error) {
+        console.warn("ไม่สามารถเล่นเสียงปิ๊บได้:", error);
+      }
+    }
+
+
+
+    function clearScheduledBeeps() {
+      for (const source of scheduledBeepSources) {
+        try {
+          source.stop();
+        } catch (error) {
+          // Source may already have finished.
+        }
+      }
+
+      scheduledBeepSources = [];
+    }
+
+    function scheduleBufferedBeepAt(targetPerformanceMs) {
+      if (
+        !audioContext ||
+        audioContext.state !== "running" ||
+        !beepBuffer
+      ) {
+        return;
+      }
+
+      const source = audioContext.createBufferSource();
+      const gain = audioContext.createGain();
+
+      source.buffer = beepBuffer;
+      gain.gain.value = 1;
+
+      source.connect(gain);
+      gain.connect(audioContext.destination);
+
+      const adjustedPerformanceMs =
+        targetPerformanceMs - BEEP_ADVANCE_MS;
+
+      let startTime;
+
+      if (typeof audioContext.getOutputTimestamp === "function") {
+        const timestamp = audioContext.getOutputTimestamp();
+
+        if (
+          Number.isFinite(timestamp.contextTime) &&
+          Number.isFinite(timestamp.performanceTime) &&
+          timestamp.performanceTime > 0
+        ) {
+          startTime =
+            timestamp.contextTime +
+            (adjustedPerformanceMs - timestamp.performanceTime) / 1000;
+        }
+      }
+
+      if (!Number.isFinite(startTime)) {
+        const outputLatency =
+          Number.isFinite(audioContext.outputLatency)
+            ? audioContext.outputLatency
+            : 0;
+
+        startTime =
+          audioContext.currentTime +
+          (adjustedPerformanceMs - performance.now()) / 1000 -
+          outputLatency;
+      }
+
+      startTime = Math.max(
+        audioContext.currentTime + 0.005,
+        startTime
+      );
+
+      source.start(startTime);
+      scheduledBeepSources.push(source);
+
+      source.addEventListener("ended", () => {
+        scheduledBeepSources =
+          scheduledBeepSources.filter((item) => item !== source);
+      });
+    }
+
+    function scheduleMatchFinalBeeps() {
+      clearScheduledBeeps();
+
+      if (
+        phase !== PHASE.MATCH ||
+        !running ||
+        !audioContext ||
+        audioContext.state !== "running"
+      ) {
+        return;
+      }
+
+      const now = performance.now();
+
+      // Absolute targets: exactly when the timer reaches 00:05 ... 00:01.
+      for (let second = 5; second >= 1; second--) {
+        const targetPerformanceMs =
+          endAt - second * 1000;
+
+        if (targetPerformanceMs >= now - 30) {
+          scheduleBufferedBeepAt(targetPerformanceMs);
+        }
+      }
+    }
+
+    function highStartBeep() {
+      try {
+        if (
+          !audioContext ||
+          audioContext.state !== "running"
+        ) {
+          return;
+        }
+
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(
+          1800,
+          audioContext.currentTime
+        );
+
+        gain.gain.setValueAtTime(
+          0.18,
+          audioContext.currentTime
+        );
+        gain.gain.exponentialRampToValueAtTime(
+          0.001,
+          audioContext.currentTime + 0.22
+        );
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.22);
+      } catch (error) {
+        console.warn("ไม่สามารถเล่นเสียงเริ่มการแข่งขันได้:", error);
+      }
+    }
+
+    function playHornOnce() {
+      try {
+        hornAudio.pause();
+        hornAudio.currentTime = 0;
+
+        const playPromise = hornAudio.play();
+
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.warn(
+              "ไม่สามารถเล่น Horn10.mp3 ได้ กรุณาวางไฟล์ไว้โฟลเดอร์เดียวกับ HTML:",
+              error
+            );
+          });
+        }
+      } catch (error) {
+        console.warn("ไม่พบไฟล์ Horn10.mp3:", error);
+      }
+    }
+
+    function setBodyState() {
+      if (phase === PHASE.READY) {
+        document.body.className = "ready";
+        return;
+      }
+
+      if (phase === PHASE.COUNTDOWN) {
+        document.body.className = "countdown";
+        return;
+      }
+
+      if (phase === PHASE.FINISHED) {
+        document.body.className = "finished";
+        return;
+      }
+
+      const secondsLeft = Math.ceil(remainingMs / 1000);
+
+      if (secondsLeft <= 10) {
+        document.body.className = "warning-10";
+      } else if (secondsLeft <= 15) {
+        document.body.className = "warning-15";
+      } else if (secondsLeft <= 30) {
+        document.body.className = "warning-30";
+      } else {
+        document.body.className = "match-normal";
+      }
+    }
+
+    function updateDisplay() {
+      setBodyState();
+
+      if (phase === PHASE.READY) {
+        timeEl.textContent = formatTime(MATCH_SECONDS * 1000);
+        phaseEl.textContent = "พร้อมเริ่มการแข่งขัน";
+        startStopBtn.textContent = "START";
+        return;
+      }
+
+      timeEl.textContent = formatTime(remainingMs);
+
+      if (phase === PHASE.COUNTDOWN) {
+        phaseEl.textContent = running
+          ? "เริ่มการแข่งขันในอีก"
+          : "หยุดการนับถอยหลัง";
+      } else if (phase === PHASE.MATCH) {
+        phaseEl.textContent = running
+          ? "กำลังแข่งขัน"
+          : "หยุดเวลา";
+      } else {
+        phaseEl.textContent = "หมดเวลา";
+      }
+
+      startStopBtn.textContent =
+        phase === PHASE.FINISHED
+          ? "START AGAIN"
+          : running
+            ? "STOP"
+            : "START";
+    }
+
+    function startCurrentPhase() {
+      running = true;
+      endAt = performance.now() + remainingMs;
+      lastDisplayedSecond = Math.ceil(remainingMs / 1000);
+
+      if (phase === PHASE.MATCH) {
+        scheduleMatchFinalBeeps();
+      }
+
+      updateDisplay();
+      animationId = requestAnimationFrame(tick);
+    }
+
+    function startSequence() {
+      phase = PHASE.COUNTDOWN;
+      remainingMs = START_DELAY_SECONDS * 1000;
+      startCurrentPhase();
+
+      // ให้เสียงปิ๊บสำหรับเลข 5 ทันทีเมื่อเริ่มนับถอยหลัง
+      beep();
+    }
+
+    function pauseTimer() {
+      if (!running) {
+        return;
+      }
+
+      remainingMs = Math.max(0, endAt - performance.now());
+      running = false;
+      clearScheduledBeeps();
+
+      if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+
+      updateDisplay();
+    }
+
+    function playCountdownBeep(displayedSecond) {
+      // Pre-start countdown only: 4, 3, 2, 1.
+      // The first beep for 5 is played immediately in startSequence().
+      if (
+        phase === PHASE.COUNTDOWN &&
+        displayedSecond > 0 &&
+        displayedSecond < 5
+      ) {
+        beep();
+      }
+    }
+
+    function tick(now) {
+      if (!running) {
+        return;
+      }
+
+      remainingMs = Math.max(0, endAt - now);
+      const displayedSecond = Math.ceil(remainingMs / 1000);
+
+      if (displayedSecond !== lastDisplayedSecond) {
+        playCountdownBeep(displayedSecond);
+        lastDisplayedSecond = displayedSecond;
+      }
+
+      updateDisplay();
+
+      if (remainingMs <= 0) {
+        if (phase === PHASE.COUNTDOWN) {
+          highStartBeep();
+          phase = PHASE.MATCH;
+          remainingMs = MATCH_SECONDS * 1000;
+          endAt = performance.now() + remainingMs;
+          lastDisplayedSecond = MATCH_SECONDS;
+
+          scheduleMatchFinalBeeps();
+          updateDisplay();
+          animationId = requestAnimationFrame(tick);
+          return;
+        }
+
+        running = false;
+        phase = PHASE.FINISHED;
+        remainingMs = 0;
+        animationId = null;
+        clearScheduledBeeps();
+
+        // หมดเวลา: เรียก Horn10.mp3 เพียง 1 ครั้ง
+        playHornOnce();
+        updateDisplay();
+        return;
+      }
+
+      animationId = requestAnimationFrame(tick);
+    }
+
+    function resetTimer() {
+      running = false;
+      clearScheduledBeeps();
+
+      if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+
+      hornAudio.pause();
+      hornAudio.currentTime = 0;
+
+      phase = PHASE.READY;
+      remainingMs = MATCH_SECONDS * 1000;
+      lastDisplayedSecond = null;
+
+      updateDisplay();
+    }
+
+    async function toggleTimer() {
+      const audioReady = await ensureAudioReady();
+
+      if (!audioReady) {
+        console.warn("ระบบเสียงยังไม่พร้อม แต่ตัวจับเวลาจะทำงานต่อ");
+      }
+
+      if (phase === PHASE.READY || phase === PHASE.FINISHED) {
+        resetTimer();
+        startSequence();
+        return;
+      }
+
+      if (running) {
+        pauseTimer();
+      } else {
+        startCurrentPhase();
+      }
+    }
+
+    startStopBtn.addEventListener("pointerdown", () => {
+      ensureAudioReady();
+    });
+    startStopBtn.addEventListener("click", toggleTimer);
+    resetBtn.addEventListener("click", resetTimer);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        toggleTimer();
+      }
+
+      if (event.key.toLowerCase() === "r") {
+        resetTimer();
+      }
+    });
+
+    updateDisplay();
+  </script>
+</body>
+</html>
