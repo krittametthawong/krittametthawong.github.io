@@ -239,8 +239,6 @@
     const START_DELAY_SECONDS = 5;
     const MATCH_SECONDS = 60;
 
-    // No offset: beep exactly when the displayed second changes.
-    const BEEP_DELAY_MS = 0;
 
     const PHASE = Object.freeze({
       READY: "ready",
@@ -262,7 +260,7 @@
     let endAt = 0;
     let animationId = null;
     let lastDisplayedSecond = null;
-    let scheduledBeepSources = [];
+    let previousRemainingMs = remainingMs;
 
     function formatTime(milliseconds) {
       const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000));
@@ -348,106 +346,6 @@
     }
 
 
-
-    function clearScheduledBeeps() {
-      for (const source of scheduledBeepSources) {
-        try {
-          source.stop();
-        } catch (error) {
-          // Source may already have finished.
-        }
-      }
-
-      scheduledBeepSources = [];
-    }
-
-    function scheduleBufferedBeepAt(targetPerformanceMs) {
-      if (
-        !audioContext ||
-        audioContext.state !== "running" ||
-        !beepBuffer
-      ) {
-        return;
-      }
-
-      const source = audioContext.createBufferSource();
-      const gain = audioContext.createGain();
-
-      source.buffer = beepBuffer;
-      gain.gain.value = 1;
-
-      source.connect(gain);
-      gain.connect(audioContext.destination);
-
-      const adjustedPerformanceMs =
-        targetPerformanceMs;
-
-      let startTime;
-
-      if (typeof audioContext.getOutputTimestamp === "function") {
-        const timestamp = audioContext.getOutputTimestamp();
-
-        if (
-          Number.isFinite(timestamp.contextTime) &&
-          Number.isFinite(timestamp.performanceTime) &&
-          timestamp.performanceTime > 0
-        ) {
-          startTime =
-            timestamp.contextTime +
-            (adjustedPerformanceMs - timestamp.performanceTime) / 1000;
-        }
-      }
-
-      if (!Number.isFinite(startTime)) {
-        const outputLatency =
-          Number.isFinite(audioContext.outputLatency)
-            ? audioContext.outputLatency
-            : 0;
-
-        startTime =
-          audioContext.currentTime +
-          (adjustedPerformanceMs - performance.now()) / 1000 -
-          outputLatency;
-      }
-
-      startTime = Math.max(
-        audioContext.currentTime + 0.005,
-        startTime
-      );
-
-      source.start(startTime);
-      scheduledBeepSources.push(source);
-
-      source.addEventListener("ended", () => {
-        scheduledBeepSources =
-          scheduledBeepSources.filter((item) => item !== source);
-      });
-    }
-
-    function scheduleMatchFinalBeeps() {
-      clearScheduledBeeps();
-
-      if (
-        phase !== PHASE.MATCH ||
-        !running ||
-        !audioContext ||
-        audioContext.state !== "running"
-      ) {
-        return;
-      }
-
-      const now = performance.now();
-
-      // Absolute targets: exactly when the timer reaches 00:05 ... 00:01.
-      for (let second = 5; second >= 1; second--) {
-        const targetPerformanceMs =
-          endAt - second * 1000;
-
-        if (targetPerformanceMs >= now - 30) {
-          scheduleBufferedBeepAt(targetPerformanceMs);
-        }
-      }
-    }
 
     function highStartBeep() {
       try {
@@ -571,10 +469,7 @@
       running = true;
       endAt = performance.now() + remainingMs;
       lastDisplayedSecond = Math.ceil(remainingMs / 1000);
-
-      if (phase === PHASE.MATCH) {
-        scheduleMatchFinalBeeps();
-      }
+      previousRemainingMs = remainingMs;
 
       updateDisplay();
       animationId = requestAnimationFrame(tick);
@@ -596,7 +491,6 @@
 
       remainingMs = Math.max(0, endAt - performance.now());
       running = false;
-      clearScheduledBeeps();
 
       if (animationId !== null) {
         cancelAnimationFrame(animationId);
@@ -618,11 +512,30 @@
       }
     }
 
+
+    function playMatchFinalBeep(previousMs, currentMs) {
+      if (phase !== PHASE.MATCH) {
+        return;
+      }
+
+      const thresholds = [5000, 4000, 3000, 2000, 1000];
+
+      for (const threshold of thresholds) {
+        // Beep only after the real remaining time reaches the threshold.
+        // Example: 5.20 s -> no beep, 5.00 s or lower -> beep.
+        if (previousMs > threshold && currentMs <= threshold) {
+          beep();
+          break;
+        }
+      }
+    }
+
     function tick(now) {
       if (!running) {
         return;
       }
 
+      const framePreviousMs = remainingMs;
       remainingMs = Math.max(0, endAt - now);
       const displayedSecond = Math.ceil(remainingMs / 1000);
 
@@ -630,6 +543,9 @@
         playCountdownBeep(displayedSecond);
         lastDisplayedSecond = displayedSecond;
       }
+
+      playMatchFinalBeep(framePreviousMs, remainingMs);
+      previousRemainingMs = remainingMs;
 
       updateDisplay();
 
@@ -640,8 +556,8 @@
           remainingMs = MATCH_SECONDS * 1000;
           endAt = performance.now() + remainingMs;
           lastDisplayedSecond = MATCH_SECONDS;
+          previousRemainingMs = remainingMs;
 
-          scheduleMatchFinalBeeps();
           updateDisplay();
           animationId = requestAnimationFrame(tick);
           return;
@@ -651,8 +567,7 @@
         phase = PHASE.FINISHED;
         remainingMs = 0;
         animationId = null;
-        clearScheduledBeeps();
-
+  
         // หมดเวลา: เรียก Horn10.mp3 เพียง 1 ครั้ง
         playHornOnce();
         updateDisplay();
@@ -664,7 +579,6 @@
 
     function resetTimer() {
       running = false;
-      clearScheduledBeeps();
 
       if (animationId !== null) {
         cancelAnimationFrame(animationId);
@@ -677,6 +591,7 @@
       phase = PHASE.READY;
       remainingMs = MATCH_SECONDS * 1000;
       lastDisplayedSecond = null;
+      previousRemainingMs = remainingMs;
 
       updateDisplay();
     }
